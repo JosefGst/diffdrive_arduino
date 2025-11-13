@@ -39,10 +39,18 @@ def generate_launch_description():
             description="Start robot with mock hardware mirroring command to its states.",
         )
     )
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "device",
+            default_value="/dev/ttyUSB0",
+            description="Serial device for hardware interface.",
+        )
+    )
 
     # Initialize Arguments
     gui = LaunchConfiguration("gui")
     use_mock_hardware = LaunchConfiguration("use_mock_hardware")
+    device = LaunchConfiguration("device")
 
     # Get URDF via xacro
     robot_description_content = Command(
@@ -53,8 +61,9 @@ def generate_launch_description():
                 [FindPackageShare("diffdrive_arduino"), "urdf", "diffbot.urdf.xacro"]
             ),
             " ",
-            "use_mock_hardware:=",
-            use_mock_hardware,
+            "use_mock_hardware:=", use_mock_hardware,
+            " ",
+            "device:=", device,
         ]
     )
     robot_description = {"robot_description": robot_description_content}
